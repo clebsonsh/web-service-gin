@@ -123,6 +123,8 @@ func getAlbumByID(c *gin.Context) {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 			return
 		}
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "error getting album"})
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, alb)
