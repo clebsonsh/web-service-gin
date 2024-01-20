@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 var db *sql.DB
@@ -22,13 +23,21 @@ type album struct {
 }
 
 func main() {
+	// Load environment variables from .env file.
+	envErr := godotenv.Load()
+	if envErr != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	gin.SetMode(os.Getenv("GIN_MODE"))
+
 	// Capture connection properties.
 	cfg := mysql.Config{
-		User:                 os.Getenv("DBUSER"),
-		Passwd:               os.Getenv("DBPASS"),
+		User:                 os.Getenv("DB_USERNAME"),
+		Passwd:               os.Getenv("DB_PASSWORD"),
 		Net:                  "tcp",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "recordings",
+		Addr:                 os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT"),
+		DBName:               os.Getenv("DB_DATABASE"),
 		AllowNativePasswords: true,
 	}
 	// Get a database handle.
